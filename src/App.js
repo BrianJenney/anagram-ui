@@ -3,8 +3,9 @@ import axios from "axios";
 
 class App extends Component {
     state = {
-        anagram: null,
-        userSearch: ""
+        anagram: { anagrams: [], twoWords: [] },
+        userSearch: "",
+        searching: false
     };
 
     handleChange = e => {
@@ -12,6 +13,7 @@ class App extends Component {
     };
 
     getAnagram = () => {
+        this.searchingState(true);
         axios
             .get(
                 `https://anagram-services.herokuapp.com/anagram?word=${
@@ -20,7 +22,12 @@ class App extends Component {
             )
             .then(response => {
                 this.setState({ anagram: response.data });
+                this.searchingState(false);
             });
+    };
+
+    searchingState = bool => {
+        this.setState({ searching: bool });
     };
 
     render() {
@@ -36,7 +43,7 @@ class App extends Component {
                     onChange={this.handleChange}
                 />
 
-                <div className="form-row text-center">
+                <div className="form-row text-center mb-3">
                     <div className="col-12">
                         <button
                             disabled={this.state.userSearch.length < 3}
@@ -48,9 +55,14 @@ class App extends Component {
                     </div>
                 </div>
 
+                <div className="searching">
+                    {this.state.searching && <span className="fa fa-spinner" />}
+                </div>
+
                 <div>
-                    {this.state.anagram &&
-                        !this.state.anagram.success && (
+                    {this.state.anagram.anagrams.length === 0 &&
+                        this.state &&
+                        this.state.anagram.success === false && (
                             <div className="text-center">
                                 <h3 className="text-muted">
                                     Sorry Charlie, can't find an anagram with
@@ -60,26 +72,26 @@ class App extends Component {
                         )}
                 </div>
 
-                <div className="anagrams">
-                    {this.state.anagram &&
-                        this.state.anagram.anagrams.map((word, idx) => {
-                            return (
-                                <div className="text-center">
-                                    <div key={idx}>{word}</div>
-                                </div>
-                            );
-                        })}
+                <div className="mt-3 w-75 m-auto">
+                    {this.state.anagram.anagrams.length > 0 && (
+                        <div>
+                            <p className="text-muted text-center">
+                                <b>Possible Combinations: </b>
+                                {this.state.anagram.anagrams.join(", ")}
+                            </p>
+                        </div>
+                    )}
+                </div>
 
-                    <div className="mt-3">
-                        {this.state.anagram &&
-                            this.state.anagram.twoWords.map((word, idx) => {
-                                return (
-                                    <div className="text-center">
-                                        <div key={idx}>{word}</div>
-                                    </div>
-                                );
-                            })}
-                    </div>
+                <div className="mt-3 w-75 m-auto">
+                    {this.state.anagram.twoWords.length > 0 && (
+                        <div>
+                            <p className="text-muted text-center">
+                                <b>Anagram: </b>
+                                {this.state.anagram.twoWords.join(", ")}
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
         );
