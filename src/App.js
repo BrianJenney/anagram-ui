@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import "./App.css";
 
 class App extends Component {
     state = {
@@ -38,7 +39,8 @@ class App extends Component {
                 </div>
 
                 <input
-                    className="form-control w-50 m-auto"
+                    className="form-control w-50 m-auto text-center"
+                    placeholder="Enter a word (ex: bewildered)"
                     type="text"
                     onChange={this.handleChange}
                 />
@@ -50,7 +52,7 @@ class App extends Component {
                             className="btn btn-outline-success mt-2 text-center"
                             onClick={this.getAnagram}
                         >
-                            Search Anagrams
+                            Get Anagrams
                         </button>
                     </div>
                 </div>
@@ -73,10 +75,10 @@ class App extends Component {
                 </div>
 
                 <div className="mt-3 w-75 m-auto">
-                    {this.state.anagram.anagrams.length > 0 && (
+                    {this.state.anagram.anagrams.length > 2 && (
                         <div>
                             <p className="text-muted text-center">
-                                <b>Possible Combinations: </b>
+                                <b>Anagram (More than 2 words): </b>
                                 {this.state.anagram.anagrams.join(", ")}
                             </p>
                         </div>
@@ -87,7 +89,7 @@ class App extends Component {
                     {this.state.anagram.twoWords.length > 0 && (
                         <div>
                             <p className="text-muted text-center">
-                                <b>Anagram: </b>
+                                <b>Anagram (2 words): </b>
                                 {this.state.anagram.twoWords.join(", ")}
                             </p>
                         </div>
